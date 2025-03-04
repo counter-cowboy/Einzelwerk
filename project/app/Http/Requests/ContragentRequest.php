@@ -9,10 +9,7 @@ class ContragentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'ogrn' => ['required'],
-            'address' => ['required'],
-            'user_id' => ['required', 'exists:users'],
+            'inn' => ['required', 'string']
         ];
     }
 

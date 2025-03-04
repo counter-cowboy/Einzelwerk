@@ -64,6 +64,11 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
+        'agent' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/agent.log'),
+            'level' => 'error',
+        ],
 
         'daily' => [
             'driver' => 'daily',

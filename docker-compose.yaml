@@ -6,7 +6,7 @@ services:
     container_name: nginx
     image: nginx:latest
     ports:
-      - "80:80"
+      - "8001:80"
     volumes:
       - './project:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
@@ -17,10 +17,10 @@ services:
     container_name: mysql
     image: mysql:8.0.30
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_TCP_PORT=3306
+      - MYSQL_TCP_PORT=3307
     volumes:
       - './docker/volume/mysql:/var/lib/mysql'
       - './docker/volume/init.sql:/docker-entrypoint-initdb.d/init.sql'

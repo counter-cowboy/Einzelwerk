@@ -29,7 +29,7 @@ return [
     | This array contains the authentication guards that will be checked when
     | Sanctum is trying to authenticate a request. If none of these guards
     | are able to authenticate the request, Sanctum will use the bearer
-    | token that's present on an incoming request for authentication.
+    | token.txt that's present on an incoming request for authentication.
     |
     */
 
@@ -40,8 +40,8 @@ return [
     | Expiration Minutes
     |--------------------------------------------------------------------------
     |
-    | This value controls the number of minutes until an issued token will be
-    | considered expired. This will override any values set in the token's
+    | This value controls the number of minutes until an issued token.txt will be
+    | considered expired. This will override any values set in the token.txt's
     | "expires_at" attribute, but first-party sessions are not affected.
     |
     */
