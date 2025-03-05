@@ -10,11 +10,6 @@ RUN apt-get install -y \
 
 RUN docker-php-ext-install pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 
-#RUN pecl install xdebug-3.2.0 && docker-php-ext-enable xdebug
-
-#xDebug
-#COPY docker/php/conf.d/* $PHP_INI_DIR/conf.d/
-
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
@@ -25,15 +20,10 @@ RUN composer --version
 RUN chmod -R guo+w /var/www/html/storage
 #RUN pecl install redis && docker-php-ext-enable redis
 
-
-
-
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 #RUN php artisan migrate --database=mysql && php artisan db:seed --database=mysql
 #
 #RUN php artisan migrate --database=mysql_test && php artisan db:seed --database=mysql_test
 
-
 CMD ["php-fpm"]
-
