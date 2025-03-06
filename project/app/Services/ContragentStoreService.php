@@ -25,7 +25,7 @@ class ContragentStoreService
     /**
      * @throws DbContragentException
      */
-    public function store(ContragentStoreDTO $dto)
+    public function store(ContragentStoreDTO $dto): Contragent
     {
         $inn = $dto->request->validated();
 
