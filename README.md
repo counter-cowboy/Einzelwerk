@@ -3,6 +3,8 @@ Go to folder
 ```bash
 cd Einzelwerk
 ```
+Create file "token" in the root of directory and put your DaData-token into it.
+
 Rename .env  
 ```bash
 make env
