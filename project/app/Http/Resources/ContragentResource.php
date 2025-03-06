@@ -5,8 +5,47 @@ namespace App\Http\Resources;
 use App\Models\Contragent;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Annotations as OA;
 
-/** @mixin Contragent */
+/**
+ * @OA\Schema(
+ *      schema="ContragentResource",
+ *      type="object",
+ *      required={"id", "name"},
+ *      @OA\Property(
+ *          property="id",
+ *          type="integer",
+ *          description="ID контрагента"
+ *      ),
+ *      @OA\Property(
+ *          property="name",
+ *          type="string",
+ *          description="Название контрагента"
+ *      ),
+ *     @OA\Property(
+ *           property="address",
+ *           type="string",
+ *           description="Адрес"
+ *       ),
+ *     @OA\Property(
+ *           property="ogrn",
+ *           type="string",
+ *           description="ОГРН"
+ *       ),
+ *      @OA\Property(
+ *          property="created_at",
+ *          type="string",
+ *          format="date-time",
+ *          description="Дата создания"
+ *      ),
+ *      @OA\Property(
+ *          property="updated_at",
+ *          type="string",
+ *          format="date-time",
+ *          description="Дата последнего обновления"
+ *      )
+ *  )
+ * */
 class ContragentResource extends JsonResource
 {
     public function toArray(Request $request): array

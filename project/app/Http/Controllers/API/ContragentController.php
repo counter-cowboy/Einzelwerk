@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\API;
 
 use App\DTO\ContragentStoreDTO;
+use App\Exceptions\DbContragentException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContragentRequest;
 use App\Http\Resources\ContragentResource;
+use App\Models\Contragent;
 use App\Services\ContragentStoreService;
 use App\Tokens\TokenRepository;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * @OA\Info(
@@ -35,21 +38,37 @@ class ContragentController extends Controller
     /**
      * @OA\Get(
      *     path="/api/contragents",
-     *     summary="Fetch data for authorized user",
+     *     summary="Получить список контрагентов",
+     *     description="Метод возвращает список контрагентов для авторизованного пользователя.",
+     *     operationId="getContragents",
+     *     tags={"Contragents"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
-     *         response="200",
-     *          description="success",
-     *     @OA\JsonContent(
-     *         type="object",
-     *         @OA\Property(property="data", type="array",
-     *         @OA\Items(
-     *             type="string"
-     *       )
+     *         response=200,
+     *         description="Список контрагентов успешно получен",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ContragentResource")
+     *         )
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Неавторизован",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Внутренняя ошибка сервера",
+     *     )
+     * )
+     * @OA\SecurityScheme(
+     *      securityScheme="sanctum",
+     *      type="http",
+     *      scheme="bearer",
+     *      bearerFormat="Sanctum",
+     *      description="Токен авторизации для доступа "
+     *  )
+
      *
-     * )
-     * )
-     * )
      */
     public function index()
     {
@@ -60,12 +79,15 @@ class ContragentController extends Controller
 
     public function store(ContragentRequest $request, ContragentStoreService $storeService)
     {
-        $contragent = $storeService->store(new ContragentStoreDTO($request, $this->token));
+        try {
+            $contragent = $storeService->store(new ContragentStoreDTO($request, $this->token));
 
-        if (null == $contragent) {
-            return response()->json(['error' => 'Database error'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } else {
-            return new ContragentResource($contragent);
+            return response()->json(['data' => $contragent], Response::HTTP_OK);
+
+        } catch (DbContragentException $exception) {
+            return response()->json(['error' => $exception->getMessage(), $exception->getCode()], Response::HTTP_BAD_REQUEST);
+        } catch (Throwable $ex) {
+            return response()->json(['error' => 'Internal error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
