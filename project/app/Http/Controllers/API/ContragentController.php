@@ -10,6 +10,8 @@ use App\Http\Resources\ContragentResource;
 use App\Models\Contragent;
 use App\Services\ContragentStoreService;
 use App\Tokens\TokenRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,17 +69,22 @@ class ContragentController extends Controller
      *      bearerFormat="Sanctum",
      *      description="Токен авторизации для доступа "
      *  )
-
      *
      */
-    public function index()
+    public function index(): JsonResponse|AnonymousResourceCollection
     {
         $contragents = Auth::user()->contragent()->get();
+
+        if (null == $contragents) {
+            return response()->json([
+                'message' => 'No contragents created yet',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         return ContragentResource::collection($contragents);
     }
 
-    public function store(ContragentRequest $request, ContragentStoreService $storeService)
+    public function store(ContragentRequest $request, ContragentStoreService $storeService): JsonResponse
     {
         try {
             $contragent = $storeService->store(new ContragentStoreDTO($request, $this->token));
@@ -85,7 +92,9 @@ class ContragentController extends Controller
             return response()->json(['data' => $contragent], Response::HTTP_OK);
 
         } catch (DbContragentException $exception) {
-            return response()->json(['error' => $exception->getMessage(), $exception->getCode()], Response::HTTP_BAD_REQUEST);
+            return response()->json(['error' => $exception->getMessage(), $exception->getCode()],
+                Response::HTTP_BAD_REQUEST);
+
         } catch (Throwable $ex) {
             return response()->json(['error' => 'Internal error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
