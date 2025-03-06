@@ -18,12 +18,8 @@ COPY ../../project /var/www/html
 RUN composer install
 RUN composer --version
 RUN chmod -R guo+w /var/www/html/storage
-#RUN pecl install redis && docker-php-ext-enable redis
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-#RUN php artisan migrate --database=mysql && php artisan db:seed --database=mysql
-#
-#RUN php artisan migrate --database=mysql_test && php artisan db:seed --database=mysql_test
 
 CMD ["php-fpm"]
